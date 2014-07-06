@@ -180,6 +180,9 @@ class ExploreMan:
 		# object collisions
 		obj = self.map.object_collision(self.player.stats.position[0]/common.tileSize, self.player.stats.position[1]/common.tileSize)
 		if obj:
+			tX = self.player.stats.position[0]/common.tileSize
+			tY = self.player.stats.position[1]/common.tileSize
+			tile = self.map.get_tile(tX,tY)
 			if obj == "chest":
 				label = self.font.render("Press space to open!", 1, common.white)
 				self.others.blit(label, self.player.stats.position)
@@ -188,12 +191,13 @@ class ExploreMan:
 				self.others.blit(label, self.player.stats.position)
 				if pygame.key.get_pressed()[K_SPACE]:
 					# get portal from map data -> get name of new map
-					tX = self.player.stats.position[0]/common.tileSize
-					tY = self.player.stats.position[1]/common.tileSize
-					tile = self.map.get_tile(tX,tY)
 					self.next_level = self.map.portals[tile['name']]
 					self.out = tile['out']
 					return 77
+			elif obj == "sign":
+				text = tile['text']
+				label = self.font.render(text, 1, common.white)
+				self.others.blit(label, self.player.stats.position)
 
 		return 0
 

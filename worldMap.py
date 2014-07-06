@@ -30,7 +30,6 @@ class Map:
 		self.height = len(self.map)
 
 		self.start = self.find_loc(self.entries['one'])
-
 	def __str__(self):
 		result = ""
 		for tile in self.map:
@@ -55,12 +54,16 @@ class Map:
 					tile = int(tile[0]), int(tile[1])
 				try:
 					screen.blit(self.tiles[tile[0]][tile[1]], (tX, tY))
+					sprite = curTile['sprite'].split(',')
+					sprite = int(sprite[0]), int(sprite[1])
+					screen.blit(self.tiles[sprite[0]][sprite[1]], (tX, tY))
 				except:
 					pass
 
 	# http://qq.readthedocs.org/en/latest/tiles.html
 	def load_tile_table(self, filename):
-		image = pygame.image.load(filename)
+		image = pygame.image.load(filename).convert_alpha()
+		image.set_colorkey(common.key)
 		image_width, image_height = image.get_size()
 		tile_table = []
 		for tile_x in range(0, image_width/common.tileSize):
@@ -68,7 +71,7 @@ class Map:
 			tile_table.append(line)
 			for tile_y in range(0, image_height/common.tileSize):
 				rect = (tile_x*common.tileSize, tile_y*common.tileSize, common.tileSize, common.tileSize)
-				line.append(image.subsurface(rect))
+				line.append(image.subsurface(rect).convert_alpha())
 		return tile_table
 
 	def get_tile(self, x, y):
